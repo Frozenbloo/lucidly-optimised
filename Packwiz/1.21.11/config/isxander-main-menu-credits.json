@@ -1,0 +1,22 @@
+{
+  "main_menu": {
+    "bottom_left": [
+      {
+        "text": "Version 0.1.0 • Minecraft 1.21.11",
+        "color": "dark_gray"
+      },
+      {
+        "text": "Lucidly Optimised",
+        "color": "gray"
+      }
+    ]
+  },
+  "pause_menu": {
+    "bottom_left": [
+      {
+        "text": "Lucidly Optimised",
+        "color": "dark_gray"
+      }
+    ]
+  }
+}

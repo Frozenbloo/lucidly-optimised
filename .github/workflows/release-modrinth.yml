@@ -1,0 +1,55 @@
+name: Release to Modrinth
+
+on:
+  workflow_dispatch:
+    inputs:
+      minecraft_version:
+        description: "Minecraft version"
+        required: true
+        type: string
+
+jobs:
+  release:
+    if: github.actor == 'Frozenbloo'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Install Packwiz
+        run: |
+          go install github.com/packwiz/packwiz@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
+
+      - name: Read modpack version from pack.toml
+        id: pack_version
+        run: |
+          VERSION=$(grep '^version' Packwiz/${{ github.event.inputs.minecraft_version }}/pack.toml | cut -d '"' -f2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build Modrinth pack
+        run: |
+          mkdir -p builds
+          cd Packwiz/${{ github.event.inputs.minecraft_version }}
+          packwiz refresh
+          packwiz modrinth export -o ../../builds/lucidly-optimised-${{ steps.pack_version.outputs.version }}.mrpack
+
+      - name: Upload to Modrinth
+        uses: Kir-Antipov/mc-publish@v3
+        with:
+          modrinth-id: ${{ secrets.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          modrinth-file: builds/lucidly-optimised-${{ steps.pack_version.outputs.version }}.mrpack
+
+          name: Lucidly Optimised - ${{ steps.pack_version.outputs.version }}
+          version: ${{ steps.pack_version.outputs.version }}
+
+          loaders: fabric
+          game-versions: ${{ github.event.inputs.minecraft_version }}
