@@ -2,7 +2,7 @@
 
 This is the full changelog for the Lucidly Optimised Fabric Modpack. For more details about each version, check out [the full modlist](https://mods.lucidlyoptimised.com).
 
-## 0.1.0 (Minecraft 1.21.11)
+## Beta 0.1.0 (Minecraft 1.21.11)
 
 ### Added
 - Alternate Current
